@@ -4,7 +4,9 @@
 
 <Workspace>
 	<Local Expanded="Yes">
+		<Model Expanded="Yes" ID="{B6532170-A31C-4F39-81C1-F69A92799204}" Loaded="No" Name="JEE_Unit_6.1_Homework" Type="{FF4B6538-9856-42CF-B9B9-304ED370CEAA}" URL="JEE_Unit_6_1_Homework.prj"/>
 		<Model Expanded="Yes" ID="{B6532170-A31C-4F39-81C1-F69A92799204}" Name="JEE_Unit_6.1_Homework" Type="{FF4B6538-9856-42CF-B9B9-304ED370CEAA}" URL="JEE_Unit_6_1_Homework.prj"/>
+		<Model Expanded="Yes" ID="{B6532170-A31C-4F39-81C1-F69A92799204}" Name="JEE_Unit_6.1_Homework" OpenedReadOnly="Yes" Selected="Yes" Type="{FF4B6538-9856-42CF-B9B9-304ED370CEAA}" URL="JEE_Unit_6_1_Homework.prj"/>
 	</Local>
 	<BrowserModule Name="Repository"/>
 </Workspace>

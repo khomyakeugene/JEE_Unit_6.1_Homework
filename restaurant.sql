@@ -1,84 +1,7 @@
-/*==============================================================*/
+﻿/*==============================================================*/
 /* DBMS name:      PostgreSQL 9.x                               */
-/* Created on:     04.05.2016 17:58:12                          */
+/* Created on:     05.05.2016 10:21:41                          */
 /*==============================================================*/
-
-
-drop index cooked_course_order_FK;
-
-drop index cooked_course_course_FK;
-
-drop index cook_FK;
-
-drop index cooked_course_PK;
-
-drop table cooked_course;
-
-drop index course_category_FK;
-
-drop index course_PK;
-
-drop table course;
-
-drop index course_category_dic_PK;
-
-drop table course_category_dic;
-
-drop index course_ingredient2_FK;
-
-drop index course_ingredient_FK;
-
-drop index course_ingredient_PK;
-
-drop table course_ingredient;
-
-drop index employee_job_position_FK;
-
-drop index employee_PK;
-
-drop table employee;
-
-drop index ingredient_PK;
-
-drop table ingredient;
-
-drop index job_position_dic_PK;
-
-drop table job_position_dic;
-
-drop index menu_PK;
-
-drop table menu;
-
-drop index menu_course_FK;
-
-drop index menu_header_FK;
-
-drop table menu_courses_list;
-
-drop index order_table_FK;
-
-drop index order_employee_FK;
-
-drop index order_PK;
-
-drop table "order";
-
-drop index order_courses2_FK;
-
-drop index order_courses_FK;
-
-drop index order_courses_PK;
-
-drop table order_courses;
-
-drop index table_PK;
-
-drop table "table";
-
-drop index warehouse_ingredient_FK;
-
-drop table warehouse;
 
 /*==============================================================*/
 /* Table: cooked_course                                         */
@@ -274,30 +197,40 @@ INSERT INTO ingredient
 VALUES (6, 'Cucumber');
 INSERT INTO ingredient
        (ingredient_id, name)
-VALUES (7, 'Cabbage');
+VALUES (7, 'White cabbage');
 INSERT INTO ingredient
        (ingredient_id, name)
-VALUES (8, 'Pe-tsai');
+VALUES (8, 'Red cabbage');
+INSERT INTO ingredient
+       (ingredient_id, name)
+VALUES (9, 'Pe-tsai');
 
+INSERT INTO ingredient
+       (ingredient_id, name)
+VALUES (101, 'Salt');
+INSERT INTO ingredient
+       (ingredient_id, name)
+VALUES (102, 'Pepper');
+INSERT INTO ingredient
+       (ingredient_id, name)
+VALUES (103, 'Cinnamon');
+INSERT INTO ingredient
+       (ingredient_id, name)
+VALUES (104, 'Sugar');
 
 INSERT INTO ingredient
        (ingredient_id, name)
-VALUES (101, 'Butter');
+VALUES (201, 'Butter');
+
 INSERT INTO ingredient
        (ingredient_id, name)
-VALUES (102, 'Oil');
+VALUES (301, 'Sunflower oil');
 INSERT INTO ingredient
        (ingredient_id, name)
-VALUES (103, 'Salt');
+VALUES (302, 'Olive oil');
 INSERT INTO ingredient
        (ingredient_id, name)
-VALUES (104, 'Pepper');
-INSERT INTO ingredient
-       (ingredient_id, name)
-VALUES (105, 'Cinnamon');
-INSERT INTO ingredient
-       (ingredient_id, name)
-VALUES (106, 'Vinegar');
+VALUES (303, 'Vinegar');
 
 /*==============================================================*/
 /* Index: ingredient_PK                                         */
@@ -337,6 +270,25 @@ VALUES (5, 'Cleaner');
 /*==============================================================*/
 create unique index job_position_dic_PK on job_position_dic (
 position_id
+);
+
+/*==============================================================*/
+/* Table: measuring_type_dic                                    */
+/*==============================================================*/
+create table measuring_type_dic (
+   measuring_type_id    SERIAL               not null,
+   measuring_type_code  CHAR(3)              not null,
+   name                 VARCHAR(256)         not null,
+   constraint PK_MEASURING_TYPE_DIC primary key (measuring_type_id),
+   constraint AK_U_MEASURING_NAME_MEASURIN unique (name),
+   constraint AK_U_MEASURING_CODE_MEASURIN unique (measuring_type_code)
+);
+
+/*==============================================================*/
+/* Index: measuring_type_dic_PK                                 */
+/*==============================================================*/
+create unique index measuring_type_dic_PK on measuring_type_dic (
+measuring_type_id
 );
 
 /*==============================================================*/
@@ -446,6 +398,55 @@ order_id
 );
 
 /*==============================================================*/
+/* Table: portion_dic                                           */
+/*==============================================================*/
+create table portion_dic (
+   portion_id           SERIAL               not null,
+   portion_type_id      INT4                 not null,
+   measuring_type_id    INT4                 not null,
+   quantity             INT4                 not null,
+   constraint PK_PORTION_DIC primary key (portion_id)
+);
+
+/*==============================================================*/
+/* Index: portion_dic_PK                                        */
+/*==============================================================*/
+create unique index portion_dic_PK on portion_dic (
+portion_id
+);
+
+/*==============================================================*/
+/* Index: portion_type_FK                                       */
+/*==============================================================*/
+create  index portion_type_FK on portion_dic (
+portion_type_id
+);
+
+/*==============================================================*/
+/* Index: portion_measury_FK                                    */
+/*==============================================================*/
+create  index portion_measury_FK on portion_dic (
+measuring_type_id
+);
+
+/*==============================================================*/
+/* Table: portion_type_dic                                      */
+/*==============================================================*/
+create table portion_type_dic (
+   portion_type_id      SERIAL               not null,
+   name                 VARCHAR(256)         not null,
+   constraint PK_PORTION_TYPE_DIC primary key (portion_type_id),
+   constraint AK_U_PORTION_TYPE_PORTION_ unique (name)
+);
+
+/*==============================================================*/
+/* Index: portion_type_dic_PK                                   */
+/*==============================================================*/
+create unique index portion_type_dic_PK on portion_type_dic (
+portion_type_id
+);
+
+/*==============================================================*/
 /* Table: "table"                                               */
 /*==============================================================*/
 create table "table" (
@@ -467,6 +468,7 @@ table_id
 /*==============================================================*/
 create table warehouse (
    ingredient_id        INT4                 not null,
+   portion_id           INT4                 not null,
    quantity             INT4                 not null,
    constraint PK_WAREHOUSE primary key (ingredient_id)
 );
@@ -476,6 +478,13 @@ create table warehouse (
 /*==============================================================*/
 create  index warehouse_ingredient_FK on warehouse (
 ingredient_id
+);
+
+/*==============================================================*/
+/* Index: wrhs_portion_FK                                       */
+/*==============================================================*/
+create  index wrhs_portion_FK on warehouse (
+portion_id
 );
 
 alter table cooked_course
@@ -543,8 +552,23 @@ alter table order_courses
       references "order" (order_id)
       on delete cascade on update cascade;
 
+alter table portion_dic
+   add constraint FK_PORTION__PORTION_M_MEASURIN foreign key (measuring_type_id)
+      references measuring_type_dic (measuring_type_id)
+      on delete restrict on update restrict;
+
+alter table portion_dic
+   add constraint FK_PORTION__PORTION_T_PORTION_ foreign key (portion_type_id)
+      references portion_type_dic (portion_type_id)
+      on delete restrict on update restrict;
+
 alter table warehouse
    add constraint FK_WAREHOUS_WAREHOUSE_INGREDIE foreign key (ingredient_id)
       references ingredient (ingredient_id)
+      on delete restrict on update restrict;
+
+alter table warehouse
+   add constraint FK_WAREHOUS_WRHS_PORT_PORTION_ foreign key (portion_id)
+      references portion_dic (portion_id)
       on delete restrict on update restrict;
 
