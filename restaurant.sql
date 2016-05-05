@@ -1,8 +1,7 @@
 ﻿/*==============================================================*/
 /* DBMS name:      PostgreSQL 9.x                               */
-/* Created on:     05.05.2016 14:39:55                          */
+/* Created on:     05.05.2016 15:01:29                          */
 /*==============================================================*/
-
 
 /*==============================================================*/
 /* Table: cooked_course                                         */
@@ -48,13 +47,12 @@ order_id
 /* Table: course                                                */
 /*==============================================================*/
 create table course (
-   course_id            INT4                 not null,
+   course_id            SERIAL               not null,
    course_category_id   INT4                 not null,
    name                 VARCHAR(256)         not null,
    weight               FLOAT8               not null,
    cost                 MONEY                not null,
-   constraint PK_COURSE primary key (course_id),
-   constraint AK_U_COURSE_NAME_COURSE unique (name)
+   constraint PK_COURSE primary key (course_id)
 );
 
 /*==============================================================*/
@@ -75,33 +73,38 @@ course_category_id
 /* Table: course_category_dic                                   */
 /*==============================================================*/
 create table course_category_dic (
-   course_category_id   INT4                 not null,
+   course_category_id   SERIAL               not null,
    name                 VARCHAR(256)         not null,
-   constraint PK_COURSE_CATEGORY_DIC primary key (course_category_id),
-   constraint AK_U_COURSE_CATEGORY__COURSE_C unique (name)
+   constraint PK_COURSE_CATEGORY_DIC primary key (course_category_id)
 );
 
 INSERT INTO course_category_dic
        (course_category_id, name)
 VALUES (101, 'Appetizers');
+
 INSERT INTO course_category_dic
        (course_category_id, name)
 VALUES (201, 'Salads');
+
 INSERT INTO course_category_dic
        (course_category_id, name)
 VALUES (301, 'Soups');
+
 INSERT INTO course_category_dic
        (course_category_id, name)
 VALUES (401, 'Entrees');
+
 INSERT INTO course_category_dic
        (course_category_id, name)
 VALUES (501, 'Deserts');
+
 INSERT INTO course_category_dic
        (course_category_id, name)
 VALUES (6001, 'Nonalcoholic beverages');
+
 INSERT INTO course_category_dic
        (course_category_id, name)
-VALUES (7001, 'Alcoholic beverages');
+       VALUES (7001, 'Alcoholic beverages');
 INSERT INTO course_category_dic
        (course_category_id, name)
 VALUES (7101, 'Beer');
@@ -168,7 +171,7 @@ course_id
 /* Table: employee                                              */
 /*==============================================================*/
 create table employee (
-   employee_id          INT4                 not null,
+   employee_id          SERIAL               not null,
    position_id          INT4                 not null,
    first_name           VARCHAR(256)         not null,
    second_name          VARCHAR(256)         not null,
@@ -197,8 +200,7 @@ position_id
 create table ingredient (
    ingredient_id        SERIAL               not null,
    name                 VARCHAR(256)         not null,
-   constraint PK_INGREDIENT primary key (ingredient_id),
-   constraint AK_U_INGREDIENT_NAME_INGREDIE unique (name)
+   constraint PK_INGREDIENT primary key (ingredient_id)
 );
 
 INSERT INTO ingredient
@@ -267,10 +269,9 @@ ingredient_id
 /* Table: job_position_dic                                      */
 /*==============================================================*/
 create table job_position_dic (
-   position_id          INT4                 not null,
+   position_id          SERIAL               not null,
    name                 VARCHAR(256)         not null,
-   constraint PK_JOB_POSITION_DIC primary key (position_id),
-   constraint AK_U_JOB_POSITION_NAM_JOB_POSI unique (name)
+   constraint PK_JOB_POSITION_DIC primary key (position_id)
 );
 
 INSERT INTO job_position_dic
@@ -303,9 +304,7 @@ create table measuring_type_dic (
    measuring_type_id    SERIAL               not null,
    measuring_type_code  CHAR(3)              not null,
    name                 VARCHAR(256)         not null,
-   constraint PK_MEASURING_TYPE_DIC primary key (measuring_type_id),
-   constraint AK_U_MEASURING_NAME_MEASURIN unique (name),
-   constraint AK_U_MEASURING_CODE_MEASURIN unique (measuring_type_code)
+   constraint PK_MEASURING_TYPE_DIC primary key (measuring_type_id)
 );
 
 INSERT INTO measuring_type_dic
@@ -326,10 +325,9 @@ measuring_type_id
 /* Table: menu                                                  */
 /*==============================================================*/
 create table menu (
-   menu_id              INT4                 not null,
+   menu_id              SERIAL               not null,
    name                 VARCHAR(256)         not null,
-   constraint PK_MENU primary key (menu_id),
-   constraint AK_U_MENU_NAME_MENU unique (name)
+   constraint PK_MENU primary key (menu_id)
 );
 
 /*==============================================================*/
@@ -343,11 +341,11 @@ menu_id
 /* Table: menu_courses_list                                     */
 /*==============================================================*/
 create table menu_courses_list (
-   course_id            INT4                 not null,
    menu_id              INT4                 not null,
+   course_id            INT4                 not null,
    course_number        INT4                 not null,
    constraint PK_MENU_COURSES_LIST primary key (course_id, menu_id),
-   constraint AK_U_NUMBER_IN_MENU_MENU_COU unique (menu_id, course_number)
+   constraint AK_U_MENU_COURSE_LIST_MENU_COU unique (menu_id, course_number)
 );
 
 /*==============================================================*/
@@ -568,8 +566,7 @@ measuring_type_id
 create table portion_type_dic (
    portion_type_id      SERIAL               not null,
    name                 VARCHAR(256)         not null,
-   constraint PK_PORTION_TYPE_DIC primary key (portion_type_id),
-   constraint AK_U_PORTION_TYPE_PORTION_ unique (name)
+   constraint PK_PORTION_TYPE_DIC primary key (portion_type_id)
 );
 
 INSERT INTO portion_type_dic
@@ -613,10 +610,10 @@ table_id
 /* Table: warehouse                                             */
 /*==============================================================*/
 create table warehouse (
-   ingredient_id        INT4                 not null,
    portion_id           INT4                 not null,
+   ingredient_id        INT4                 not null,
    quantity             FLOAT8               not null,
-   constraint PK_WAREHOUSE primary key (ingredient_id)
+   constraint PK_WAREHOUSE primary key (portion_id, ingredient_id)
 );
 
 /*==============================================================*/
@@ -661,7 +658,7 @@ alter table course_ingredient
 alter table course_ingredient
    add constraint FK_COURSE_I_COURSE_IN_COURSE foreign key (course_id)
       references course (course_id)
-      on delete cascade on update cascade;
+      on delete restrict on update restrict;
 
 alter table employee
    add constraint FK_EMPLOYEE_EMPLOYEE__JOB_POSI foreign key (position_id)
@@ -676,7 +673,7 @@ alter table menu_courses_list
 alter table menu_courses_list
    add constraint FK_MENU_COU_MENU_HEAD_MENU foreign key (menu_id)
       references menu (menu_id)
-      on delete cascade on update cascade;
+      on delete restrict on update restrict;
 
 alter table "order"
    add constraint FK_ORDER_ORDER_EMP_EMPLOYEE foreign key (employee_id)
@@ -696,7 +693,7 @@ alter table order_courses
 alter table order_courses
    add constraint FK_ORDER_CO_ORDER_COU_ORDER foreign key (order_id)
       references "order" (order_id)
-      on delete cascade on update cascade;
+      on delete restrict on update restrict;
 
 alter table portion_dic
    add constraint FK_PORTION__PORTION_M_MEASURIN foreign key (measuring_type_id)
