@@ -1,112 +1,24 @@
-/*==============================================================*/
+﻿/*==============================================================*/
 /* DBMS name:      PostgreSQL 9.x                               */
-/* Created on:     05.05.2016 16:06:05                          */
+/* Created on:     05.05.2016 18:33:54                          */
 /*==============================================================*/
-
-
-drop index cooked_course_order_FK;
-
-drop index cooked_course_course_FK;
-
-drop index cook_FK;
-
-drop index cooked_course_PK;
-
-drop table cooked_course;
-
-drop index course_category_FK;
-
-drop index course_PK;
-
-drop table course;
-
-drop index course_category_dic_PK;
-
-drop table course_category_dic;
-
-drop index crs_ingrd_course_FK;
-
-drop index crs_ingrd_ingredient_FK;
-
-drop index crs_ingrd_portion_FK;
-
-drop table course_ingredient;
-
-drop index employee_job_position_FK;
-
-drop index employee_PK;
-
-drop table employee;
-
-drop index ingredient_PK;
-
-drop table ingredient;
-
-drop index job_position_dic_PK;
-
-drop table job_position_dic;
-
-drop index measuring_type_dic_PK;
-
-drop table measuring_type_dic;
-
-drop index menu_PK;
-
-drop table menu;
-
-drop index menu_course_FK;
-
-drop index menu_header_FK;
-
-drop table menu_courses_list;
-
-drop index order_table_FK;
-
-drop index order_employee_FK;
-
-drop index order_PK;
-
-drop table "order";
-
-drop index ord_crs_order_FK;
-
-drop index ord_crs_course_FK;
-
-drop table order_course;
-
-drop index portion_measury_FK;
-
-drop index portion_type_FK;
-
-drop index portion_dic_PK;
-
-drop table portion_dic;
-
-drop index portion_type_dic_PK;
-
-drop table portion_type_dic;
-
-drop index table_PK;
-
-drop table "table";
-
-drop index wrhs_portion_FK;
-
-drop index warehouse_ingredient_FK;
-
-drop table warehouse;
 
 /*==============================================================*/
 /* Table: cooked_course                                         */
 /*==============================================================*/
 create table cooked_course (
    cooked_course_id     SERIAL               not null,
-   employee_id          INT4                 not null,
    course_id            INT4                 not null,
+   employee_id          INT4                 not null,
    order_id             INT4                 not null,
    cook_datetime        DATE                 not null,
    constraint PK_COOKED_COURSE primary key (cooked_course_id)
 );
+
+/* Chicken with mushrooms, cooked by Ihor Kvilinskyi's recipe */
+INSERT INTO cooked_course
+       (cooked_course_id, course_id, employee_id, order_id, cook_datetime)
+VALUES (1, 4001, 2, 1, '2016-05-05');
 
 /*==============================================================*/
 /* Index: cooked_course_PK                                      */
@@ -148,6 +60,16 @@ create table course (
    constraint PK_COURSE primary key (course_id),
    constraint AK_U_COURSE_COURSE unique (name)
 );
+
+/* Chicken with mushrooms, cooked by Ihor Kvilinskyi's recipe */
+INSERT INTO course
+       (course_id, course_category_id, name, weight, cost)
+VALUES (4001, 401, 'Chicken with mushrooms, cooked by Ihor Kvilinskyi-s recipe', 0.450, 98.0);
+
+/* Beer "Doms", 0.5l bottle */
+INSERT INTO course
+       (course_id, course_category_id, name, weight, cost)
+VALUES (10001, 7101, 'Beer "Doms", 0.5l bottle', 0.5, 20.0);
 
 /*==============================================================*/
 /* Index: course_PK                                             */
@@ -242,6 +164,45 @@ create table course_ingredient (
    constraint PK_COURSE_INGREDIENT primary key (course_id, ingredient_id)
 );
 
+/* Chicken with mushrooms, cooked by Ihor Kvilinskyi's recipe */
+/* Chicken fillet, 800g */
+INSERT INTO course_ingredient
+       (course_id, ingredient_id, portion_id, amount)
+VALUES (4001, 401, 1001, 0.800);
+/* Сhampignon mushrooms, 800g */
+INSERT INTO course_ingredient
+       (course_id, ingredient_id, portion_id, amount)
+VALUES (4001, 10, 1001, 0.800);
+/* Onion, 400g */
+INSERT INTO course_ingredient
+       (course_id, ingredient_id, portion_id, amount)
+VALUES (4001, 2, 1001, 0.400);
+/* Sunflower oil */
+INSERT INTO course_ingredient
+       (course_id, ingredient_id)
+VALUES (4001, 301);
+/* Salt */
+INSERT INTO course_ingredient
+       (course_id, ingredient_id)
+VALUES (4001, 101);
+/* Sugar */
+INSERT INTO course_ingredient
+       (course_id, ingredient_id)
+VALUES (4001, 111);
+/* Black pepper */
+INSERT INTO course_ingredient
+       (course_id, ingredient_id)
+VALUES (4001, 121);
+/* Bay leaf */
+INSERT INTO course_ingredient
+       (course_id, ingredient_id)
+VALUES (4001, 141);
+
+/* Beer "Doms", 0.5l bottle */
+INSERT INTO course_ingredient
+       (course_id, ingredient_id, portion_id, amount)
+VALUES (10001, 10001, 4003, 1.0);
+
 /*==============================================================*/
 /* Index: crs_ingrd_portion_FK                                  */
 /*==============================================================*/
@@ -275,6 +236,16 @@ create table employee (
    salary               MONEY                null,
    constraint PK_EMPLOYEE primary key (employee_id)
 );
+
+INSERT INTO employee
+       (employee_id, position_id, first_name, second_name)
+VALUES (1, 1, 'Yevhen', 'Khomiak');
+INSERT INTO employee
+       (employee_id, position_id, first_name, second_name)
+VALUES (2, 2, 'Ihor', 'Kvilinskyi');
+INSERT INTO employee
+       (employee_id, position_id, first_name, second_name)
+VALUES (3, 4, 'Mariia', 'Khomiak');
 
 /*==============================================================*/
 /* Index: employee_PK                                           */
@@ -327,19 +298,31 @@ VALUES (8, 'Red cabbage');
 INSERT INTO ingredient
        (ingredient_id, name)
 VALUES (9, 'Pe-tsai');
+INSERT INTO ingredient
+       (ingredient_id, name)
+VALUES (10, 'Сhampignon');
 
 INSERT INTO ingredient
        (ingredient_id, name)
 VALUES (101, 'Salt');
 INSERT INTO ingredient
        (ingredient_id, name)
-VALUES (102, 'Pepper');
+VALUES (111, 'Sugar');
 INSERT INTO ingredient
        (ingredient_id, name)
-VALUES (103, 'Cinnamon');
+VALUES (121, 'Black pepper');
 INSERT INTO ingredient
        (ingredient_id, name)
-VALUES (104, 'Sugar');
+VALUES (122, 'Red pepper');
+INSERT INTO ingredient
+       (ingredient_id, name)
+VALUES (123, 'Paprika');
+INSERT INTO ingredient
+       (ingredient_id, name)
+VALUES (131, 'Cinnamon');
+INSERT INTO ingredient
+       (ingredient_id, name)
+VALUES (141, 'Bay leaf');
 
 INSERT INTO ingredient
        (ingredient_id, name)
@@ -354,6 +337,10 @@ VALUES (302, 'Olive oil');
 INSERT INTO ingredient
        (ingredient_id, name)
 VALUES (303, 'Vinegar');
+
+INSERT INTO ingredient
+       (ingredient_id, name)
+VALUES (401, 'Chicken fillet');
 
 INSERT INTO ingredient
        (ingredient_id, name)
@@ -435,6 +422,10 @@ create table menu (
    constraint AK_U_MENU_MENU unique (name)
 );
 
+INSERT INTO menu
+       (menu_id, name)
+VALUES (1, 'Our first very simple trial menu');
+
 /*==============================================================*/
 /* Index: menu_PK                                               */
 /*==============================================================*/
@@ -452,6 +443,16 @@ create table menu_courses_list (
    constraint PK_MENU_COURSES_LIST primary key (course_id, menu_id),
    constraint AK_U_MENU_COURSES_LIS_MENU_COU unique (menu_id, course_number)
 );
+
+/* Our first very simple trial menu */
+/* Chicken with mushrooms, cooked by Ihor Kvilinskyi's recipe */
+INSERT INTO menu_courses_list
+       (menu_id, course_id, course_number)
+VALUES (1, 4001, 1);
+/* Beer "Doms", 0.5l bottle */
+INSERT INTO menu_courses_list
+       (menu_id, course_id, course_number)
+VALUES (1, 10001, 2);
 
 /*==============================================================*/
 /* Index: menu_header_FK                                        */
@@ -478,6 +479,10 @@ create table "order" (
    order_datetime       DATE                 not null,
    constraint PK_ORDER primary key (order_id)
 );
+
+INSERT INTO "order"
+       (order_id, table_id, employee_id, order_number, order_datetime)
+VALUES (1, 2, 3, 1, '2016-05-05');
 
 /*==============================================================*/
 /* Index: order_PK                                              */
@@ -509,6 +514,15 @@ create table order_course (
    quantity             INT4                 not null,
    constraint PK_ORDER_COURSE primary key (order_id, course_id)
 );
+
+/* Chicken with mushrooms, cooked by Ihor Kvilinskyi's recipe */
+INSERT INTO order_course
+       (order_id, course_id, quantity)
+VALUES (1, 4001, 1);
+/* Beer "Doms", 0.5l bottle */
+INSERT INTO order_course
+       (order_id, course_id, quantity)
+VALUES (1, 10001, 1);
 
 /*==============================================================*/
 /* Index: ord_crs_course_FK                                     */
@@ -564,6 +578,9 @@ VALUES (2006, 2, 1, 2.0, 'Packing 2kg');
 INSERT INTO portion_dic
        (portion_id, portion_type_id, measuring_type_id, amount, description)
 VALUES (2007, 2, 1, 3.0, 'Packing 3kg');
+INSERT INTO portion_dic
+       (portion_id, portion_type_id, measuring_type_id, amount, description)
+VALUES (2008, 2, 1, 0.005, 'Packing 5g');
 
 INSERT INTO portion_dic
        (portion_id, portion_type_id, measuring_type_id, amount, description)
@@ -694,8 +711,34 @@ create table "table" (
    table_id             SERIAL               not null,
    number               INT4                 not null,
    description          VARCHAR(256)         null,
-   constraint PK_TABLE primary key (table_id)
+   constraint PK_TABLE primary key (table_id),
+   constraint AK_U_TABLE_TABLE unique (number)
 );
+
+INSERT INTO "table"
+       (table_id, number, description)
+VALUES (1, 1, 'Counter');
+INSERT INTO "table"
+       (table_id, number)
+VALUES (2, 2);
+INSERT INTO "table"
+       (table_id, number)
+VALUES (3, 3);
+INSERT INTO "table"
+       (table_id, number)
+VALUES (4, 4);
+INSERT INTO "table"
+       (table_id, number)
+VALUES (5, 5);
+INSERT INTO "table"
+       (table_id, number)
+VALUES (6, 6);
+INSERT INTO "table"
+       (table_id, number)
+VALUES (7, 7);
+INSERT INTO "table"
+       (table_id, number)
+VALUES (8, 8);
 
 /*==============================================================*/
 /* Index: table_PK                                              */
@@ -713,6 +756,44 @@ create table warehouse (
    amount               FLOAT8               not null,
    constraint PK_WAREHOUSE primary key (portion_id, ingredient_id)
 );
+
+/* Champignon mushroom, measurable in kilos */
+INSERT INTO warehouse
+       (ingredient_id, portion_id, amount)
+VALUES (10, 1001, 500.0);
+
+/* Salt, measurable in 0.5gk packing */
+INSERT INTO warehouse
+       (ingredient_id, portion_id, amount)
+VALUES (101, 2002, 300.0);
+
+/* Sugar, measurable in 0.5gk packing */
+INSERT INTO warehouse
+       (ingredient_id, portion_id, amount)
+VALUES (111, 2002, 300.0);
+
+/* Sunflower oil, measurable in 1l bottle */
+INSERT INTO warehouse
+       (ingredient_id, portion_id, amount)
+VALUES (301, 4006, 700.0);
+
+/* Chicken fillet, measurable in kilos */
+INSERT INTO warehouse
+       (ingredient_id, portion_id, amount)
+VALUES (401, 1001, 50.0);
+
+/* Bay leaf, measurable in 5g packing */
+INSERT INTO warehouse
+       (ingredient_id, portion_id, amount)
+VALUES (141, 2008, 3000.0);
+
+/* Beer "Doms", measurable in 0.5l bottle */
+INSERT INTO warehouse
+       (ingredient_id, portion_id, amount)
+VALUES (10001, 4003, 1000.0);
+
+
+       
 
 /*==============================================================*/
 /* Index: warehouse_ingredient_FK                               */
