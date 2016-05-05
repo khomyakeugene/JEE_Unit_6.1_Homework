@@ -1,7 +1,8 @@
 ﻿/*==============================================================*/
 /* DBMS name:      PostgreSQL 9.x                               */
-/* Created on:     05.05.2016 10:21:41                          */
+/* Created on:     05.05.2016 14:39:55                          */
 /*==============================================================*/
+
 
 /*==============================================================*/
 /* Table: cooked_course                                         */
@@ -82,25 +83,48 @@ create table course_category_dic (
 
 INSERT INTO course_category_dic
        (course_category_id, name)
-VALUES (1, 'Appetizers');
+VALUES (101, 'Appetizers');
 INSERT INTO course_category_dic
        (course_category_id, name)
-VALUES (2, 'Salads');
+VALUES (201, 'Salads');
 INSERT INTO course_category_dic
        (course_category_id, name)
-VALUES (3, 'Soups');
+VALUES (301, 'Soups');
 INSERT INTO course_category_dic
        (course_category_id, name)
-VALUES (4, 'Entrees');
+VALUES (401, 'Entrees');
 INSERT INTO course_category_dic
        (course_category_id, name)
-VALUES (5, 'Deserts');
+VALUES (501, 'Deserts');
 INSERT INTO course_category_dic
        (course_category_id, name)
-VALUES (6, 'Nonalcoholic beverages');
+VALUES (6001, 'Nonalcoholic beverages');
 INSERT INTO course_category_dic
        (course_category_id, name)
-VALUES (7, 'Alcoholic beverages');
+VALUES (7001, 'Alcoholic beverages');
+INSERT INTO course_category_dic
+       (course_category_id, name)
+VALUES (7101, 'Beer');
+INSERT INTO course_category_dic
+       (course_category_id, name)
+VALUES (7201, 'Cider');
+INSERT INTO course_category_dic
+       (course_category_id, name)
+VALUES (7301, 'Wine');
+INSERT INTO course_category_dic
+       (course_category_id, name)
+VALUES (7401, 'Brandy');
+INSERT INTO course_category_dic
+       (course_category_id, name)
+VALUES (7501, 'Cognac');
+INSERT INTO course_category_dic
+       (course_category_id, name)
+VALUES (7601, 'Whisky');
+INSERT INTO course_category_dic
+       (course_category_id, name)
+VALUES (7701, 'Horilka');
+
+
 
 /*==============================================================*/
 /* Index: course_category_dic_PK                                */
@@ -284,6 +308,13 @@ create table measuring_type_dic (
    constraint AK_U_MEASURING_CODE_MEASURIN unique (measuring_type_code)
 );
 
+INSERT INTO measuring_type_dic
+       (measuring_type_id, measuring_type_code, name)
+VALUES (1, 'kg', 'kilogram');           
+INSERT INTO measuring_type_dic
+       (measuring_type_id, measuring_type_code, name)
+VALUES (2, 'l', 'litre');
+
 /*==============================================================*/
 /* Index: measuring_type_dic_PK                                 */
 /*==============================================================*/
@@ -404,9 +435,111 @@ create table portion_dic (
    portion_id           SERIAL               not null,
    portion_type_id      INT4                 not null,
    measuring_type_id    INT4                 not null,
-   quantity             INT4                 not null,
+   quantity             FLOAT8               null,
+   description          VARCHAR(256)         null,
    constraint PK_PORTION_DIC primary key (portion_id)
 );
+
+INSERT INTO portion_dic
+       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+VALUES (1001, 1, 1, null, 'Anything in kilograms');
+INSERT INTO portion_dic
+       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+VALUES (1002, 1, 2, null, 'Anything in litre');
+
+INSERT INTO portion_dic
+       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+VALUES (2001, 2, 1, 0.25, 'Packing 0,25kg');
+INSERT INTO portion_dic
+       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+VALUES (2002, 2, 1, 0.5, 'Packing 0,5kg');
+INSERT INTO portion_dic
+       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+VALUES (2003, 2, 1, 0.75, 'Packing 0,75kg');
+INSERT INTO portion_dic
+       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+VALUES (2004, 2, 1, 1.0, 'Packing 1kg');
+INSERT INTO portion_dic
+       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+VALUES (2005, 2, 1, 1.5, 'Packing 1,5kg');
+INSERT INTO portion_dic
+       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+VALUES (2006, 2, 1, 2.0, 'Packing 2kg');
+INSERT INTO portion_dic
+       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+VALUES (2007, 2, 1, 3.0, 'Packing 3kg');
+
+INSERT INTO portion_dic
+       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+VALUES (3001, 3, 1, 0.25, 'Can 0,25kg');
+INSERT INTO portion_dic
+       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+VALUES (3002, 3, 1, 0.33, 'Can 0,33kg');
+INSERT INTO portion_dic
+       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+VALUES (3003, 3, 1, 0.5, 'Can 0,5kg');
+INSERT INTO portion_dic
+       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+VALUES (3004, 3, 1, 1.0, 'Can 1kg');
+INSERT INTO portion_dic
+       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+VALUES (3005, 3, 1, 1.5, 'Can 1,5kg');
+INSERT INTO portion_dic
+       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+VALUES (3006, 3, 1, 2.0, 'Can 2kg');
+INSERT INTO portion_dic
+       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+VALUES (3007, 3, 1, 3.0, 'Can 3kg');
+
+INSERT INTO portion_dic
+       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+VALUES (3101, 3, 2, 0.25, 'Can 0,25l');
+INSERT INTO portion_dic
+       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+VALUES (3102, 3, 2, 0.33, 'Can 0,33l');
+INSERT INTO portion_dic
+       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+VALUES (3103, 3, 2, 0.5, 'Can 0,5l');
+INSERT INTO portion_dic
+       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+VALUES (3104, 3, 2, 1.0, 'Can 1l');
+INSERT INTO portion_dic
+       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+VALUES (3105, 3, 2, 1.5, 'Can 1,5l');
+INSERT INTO portion_dic
+       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+VALUES (3106, 3, 2, 2.0, 'Can 2l');
+INSERT INTO portion_dic
+       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+VALUES (3107, 3, 2, 3.0, 'Can 3l');
+
+INSERT INTO portion_dic
+       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+VALUES (4001, 4, 2, 0.25, 'Bottle 0,25l');
+INSERT INTO portion_dic
+       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+VALUES (4002, 4, 2, 0.33, 'Bottle 0,33l');
+INSERT INTO portion_dic
+       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+VALUES (4003, 4, 2, 0.5, 'Bottle 0,5l');
+INSERT INTO portion_dic
+       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+VALUES (4004, 4, 2, 0.6, 'Bottle 0,6l');
+INSERT INTO portion_dic
+       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+VALUES (4005, 4, 2, 0.75, 'Bottle 0,75l');
+INSERT INTO portion_dic
+       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+VALUES (4006, 4, 2, 1.0, 'Bottle 1l');
+INSERT INTO portion_dic
+       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+VALUES (4007, 4, 2, 1.5, 'Bottle 1,5l');
+INSERT INTO portion_dic
+       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+VALUES (4008, 4, 2, 1.75, 'Bottle 1,75l');
+INSERT INTO portion_dic
+       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+VALUES (4009, 4, 2, 2.0, 'Bottle 2l');
 
 /*==============================================================*/
 /* Index: portion_dic_PK                                        */
@@ -439,6 +572,19 @@ create table portion_type_dic (
    constraint AK_U_PORTION_TYPE_PORTION_ unique (name)
 );
 
+INSERT INTO portion_type_dic
+       (portion_type_id, name)
+VALUES (1, 'Portion (anything)'); 
+INSERT INTO portion_type_dic
+       (portion_type_id, name)
+VALUES (2, 'Packing');      
+INSERT INTO portion_type_dic
+       (portion_type_id, name)
+VALUES (3, 'Can'); 
+INSERT INTO portion_type_dic
+       (portion_type_id, name)
+VALUES (4, 'Bottle');     
+
 /*==============================================================*/
 /* Index: portion_type_dic_PK                                   */
 /*==============================================================*/
@@ -469,7 +615,7 @@ table_id
 create table warehouse (
    ingredient_id        INT4                 not null,
    portion_id           INT4                 not null,
-   quantity             INT4                 not null,
+   quantity             FLOAT8               not null,
    constraint PK_WAREHOUSE primary key (ingredient_id)
 );
 
