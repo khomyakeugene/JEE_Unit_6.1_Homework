@@ -1,7 +1,100 @@
-﻿/*==============================================================*/
-/* DBMS name:      PostgreSQL 9.x                               */
-/* Created on:     05.05.2016 15:01:29                          */
 /*==============================================================*/
+/* DBMS name:      PostgreSQL 9.x                               */
+/* Created on:     05.05.2016 16:06:05                          */
+/*==============================================================*/
+
+
+drop index cooked_course_order_FK;
+
+drop index cooked_course_course_FK;
+
+drop index cook_FK;
+
+drop index cooked_course_PK;
+
+drop table cooked_course;
+
+drop index course_category_FK;
+
+drop index course_PK;
+
+drop table course;
+
+drop index course_category_dic_PK;
+
+drop table course_category_dic;
+
+drop index crs_ingrd_course_FK;
+
+drop index crs_ingrd_ingredient_FK;
+
+drop index crs_ingrd_portion_FK;
+
+drop table course_ingredient;
+
+drop index employee_job_position_FK;
+
+drop index employee_PK;
+
+drop table employee;
+
+drop index ingredient_PK;
+
+drop table ingredient;
+
+drop index job_position_dic_PK;
+
+drop table job_position_dic;
+
+drop index measuring_type_dic_PK;
+
+drop table measuring_type_dic;
+
+drop index menu_PK;
+
+drop table menu;
+
+drop index menu_course_FK;
+
+drop index menu_header_FK;
+
+drop table menu_courses_list;
+
+drop index order_table_FK;
+
+drop index order_employee_FK;
+
+drop index order_PK;
+
+drop table "order";
+
+drop index ord_crs_order_FK;
+
+drop index ord_crs_course_FK;
+
+drop table order_course;
+
+drop index portion_measury_FK;
+
+drop index portion_type_FK;
+
+drop index portion_dic_PK;
+
+drop table portion_dic;
+
+drop index portion_type_dic_PK;
+
+drop table portion_type_dic;
+
+drop index table_PK;
+
+drop table "table";
+
+drop index wrhs_portion_FK;
+
+drop index warehouse_ingredient_FK;
+
+drop table warehouse;
 
 /*==============================================================*/
 /* Table: cooked_course                                         */
@@ -52,7 +145,8 @@ create table course (
    name                 VARCHAR(256)         not null,
    weight               FLOAT8               not null,
    cost                 MONEY                not null,
-   constraint PK_COURSE primary key (course_id)
+   constraint PK_COURSE primary key (course_id),
+   constraint AK_U_COURSE_COURSE unique (name)
 );
 
 /*==============================================================*/
@@ -75,7 +169,8 @@ course_category_id
 create table course_category_dic (
    course_category_id   SERIAL               not null,
    name                 VARCHAR(256)         not null,
-   constraint PK_COURSE_CATEGORY_DIC primary key (course_category_id)
+   constraint PK_COURSE_CATEGORY_DIC primary key (course_category_id),
+   constraint AK_U_COURSE_CATEGORY_COURSE_C unique (name)
 );
 
 INSERT INTO course_category_dic
@@ -140,30 +235,31 @@ course_category_id
 /* Table: course_ingredient                                     */
 /*==============================================================*/
 create table course_ingredient (
-   ingredient_id        INT4                 not null,
    course_id            INT4                 not null,
-   constraint PK_COURSE_INGREDIENT primary key (ingredient_id, course_id)
+   ingredient_id        INT4                 not null,
+   portion_id           INT4                 null,
+   amount               FLOAT8               null,
+   constraint PK_COURSE_INGREDIENT primary key (course_id, ingredient_id)
 );
 
 /*==============================================================*/
-/* Index: course_ingredient_PK                                  */
+/* Index: crs_ingrd_portion_FK                                  */
 /*==============================================================*/
-create unique index course_ingredient_PK on course_ingredient (
-ingredient_id,
-course_id
+create  index crs_ingrd_portion_FK on course_ingredient (
+portion_id
 );
 
 /*==============================================================*/
-/* Index: course_ingredient_FK                                  */
+/* Index: crs_ingrd_ingredient_FK                               */
 /*==============================================================*/
-create  index course_ingredient_FK on course_ingredient (
+create  index crs_ingrd_ingredient_FK on course_ingredient (
 ingredient_id
 );
 
 /*==============================================================*/
-/* Index: course_ingredient2_FK                                 */
+/* Index: crs_ingrd_course_FK                                   */
 /*==============================================================*/
-create  index course_ingredient2_FK on course_ingredient (
+create  index crs_ingrd_course_FK on course_ingredient (
 course_id
 );
 
@@ -200,7 +296,8 @@ position_id
 create table ingredient (
    ingredient_id        SERIAL               not null,
    name                 VARCHAR(256)         not null,
-   constraint PK_INGREDIENT primary key (ingredient_id)
+   constraint PK_INGREDIENT primary key (ingredient_id),
+   constraint AK_U_INGREDIENT_INGREDIE unique (name)
 );
 
 INSERT INTO ingredient
@@ -258,6 +355,10 @@ INSERT INTO ingredient
        (ingredient_id, name)
 VALUES (303, 'Vinegar');
 
+INSERT INTO ingredient
+       (ingredient_id, name)
+VALUES (10001, 'Beer "Doms"');
+
 /*==============================================================*/
 /* Index: ingredient_PK                                         */
 /*==============================================================*/
@@ -271,7 +372,8 @@ ingredient_id
 create table job_position_dic (
    position_id          SERIAL               not null,
    name                 VARCHAR(256)         not null,
-   constraint PK_JOB_POSITION_DIC primary key (position_id)
+   constraint PK_JOB_POSITION_DIC primary key (position_id),
+   constraint AK_U_JOB_POSITION_JOB_POSI unique (name)
 );
 
 INSERT INTO job_position_dic
@@ -304,7 +406,9 @@ create table measuring_type_dic (
    measuring_type_id    SERIAL               not null,
    measuring_type_code  CHAR(3)              not null,
    name                 VARCHAR(256)         not null,
-   constraint PK_MEASURING_TYPE_DIC primary key (measuring_type_id)
+   constraint PK_MEASURING_TYPE_DIC primary key (measuring_type_id),
+   constraint AK_U_MEASURING_TYPE_C_MEASURIN unique (measuring_type_code),
+   constraint AK_U_MEASURING_TYPE_N_MEASURIN unique (name)
 );
 
 INSERT INTO measuring_type_dic
@@ -327,7 +431,8 @@ measuring_type_id
 create table menu (
    menu_id              SERIAL               not null,
    name                 VARCHAR(256)         not null,
-   constraint PK_MENU primary key (menu_id)
+   constraint PK_MENU primary key (menu_id),
+   constraint AK_U_MENU_MENU unique (name)
 );
 
 /*==============================================================*/
@@ -345,7 +450,7 @@ create table menu_courses_list (
    course_id            INT4                 not null,
    course_number        INT4                 not null,
    constraint PK_MENU_COURSES_LIST primary key (course_id, menu_id),
-   constraint AK_U_MENU_COURSE_LIST_MENU_COU unique (menu_id, course_number)
+   constraint AK_U_MENU_COURSES_LIS_MENU_COU unique (menu_id, course_number)
 );
 
 /*==============================================================*/
@@ -396,33 +501,26 @@ table_id
 );
 
 /*==============================================================*/
-/* Table: order_courses                                         */
+/* Table: order_course                                          */
 /*==============================================================*/
-create table order_courses (
-   course_id            INT4                 not null,
+create table order_course (
    order_id             INT4                 not null,
-   constraint PK_ORDER_COURSES primary key (course_id, order_id)
+   course_id            INT4                 not null,
+   quantity             INT4                 not null,
+   constraint PK_ORDER_COURSE primary key (order_id, course_id)
 );
 
 /*==============================================================*/
-/* Index: order_courses_PK                                      */
+/* Index: ord_crs_course_FK                                     */
 /*==============================================================*/
-create unique index order_courses_PK on order_courses (
-course_id,
-order_id
-);
-
-/*==============================================================*/
-/* Index: order_courses_FK                                      */
-/*==============================================================*/
-create  index order_courses_FK on order_courses (
+create  index ord_crs_course_FK on order_course (
 course_id
 );
 
 /*==============================================================*/
-/* Index: order_courses2_FK                                     */
+/* Index: ord_crs_order_FK                                      */
 /*==============================================================*/
-create  index order_courses2_FK on order_courses (
+create  index ord_crs_order_FK on order_course (
 order_id
 );
 
@@ -433,110 +531,110 @@ create table portion_dic (
    portion_id           SERIAL               not null,
    portion_type_id      INT4                 not null,
    measuring_type_id    INT4                 not null,
-   quantity             FLOAT8               null,
+   amount               FLOAT8               null,
    description          VARCHAR(256)         null,
    constraint PK_PORTION_DIC primary key (portion_id)
 );
 
 INSERT INTO portion_dic
-       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+       (portion_id, portion_type_id, measuring_type_id, amount, description)
 VALUES (1001, 1, 1, null, 'Anything in kilograms');
 INSERT INTO portion_dic
-       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+       (portion_id, portion_type_id, measuring_type_id, amount, description)
 VALUES (1002, 1, 2, null, 'Anything in litre');
 
 INSERT INTO portion_dic
-       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+       (portion_id, portion_type_id, measuring_type_id, amount, description)
 VALUES (2001, 2, 1, 0.25, 'Packing 0,25kg');
 INSERT INTO portion_dic
-       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+       (portion_id, portion_type_id, measuring_type_id, amount, description)
 VALUES (2002, 2, 1, 0.5, 'Packing 0,5kg');
 INSERT INTO portion_dic
-       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+       (portion_id, portion_type_id, measuring_type_id, amount, description)
 VALUES (2003, 2, 1, 0.75, 'Packing 0,75kg');
 INSERT INTO portion_dic
-       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+       (portion_id, portion_type_id, measuring_type_id, amount, description)
 VALUES (2004, 2, 1, 1.0, 'Packing 1kg');
 INSERT INTO portion_dic
-       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+       (portion_id, portion_type_id, measuring_type_id, amount, description)
 VALUES (2005, 2, 1, 1.5, 'Packing 1,5kg');
 INSERT INTO portion_dic
-       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+       (portion_id, portion_type_id, measuring_type_id, amount, description)
 VALUES (2006, 2, 1, 2.0, 'Packing 2kg');
 INSERT INTO portion_dic
-       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+       (portion_id, portion_type_id, measuring_type_id, amount, description)
 VALUES (2007, 2, 1, 3.0, 'Packing 3kg');
 
 INSERT INTO portion_dic
-       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+       (portion_id, portion_type_id, measuring_type_id, amount, description)
 VALUES (3001, 3, 1, 0.25, 'Can 0,25kg');
 INSERT INTO portion_dic
-       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+       (portion_id, portion_type_id, measuring_type_id, amount, description)
 VALUES (3002, 3, 1, 0.33, 'Can 0,33kg');
 INSERT INTO portion_dic
-       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+       (portion_id, portion_type_id, measuring_type_id, amount, description)
 VALUES (3003, 3, 1, 0.5, 'Can 0,5kg');
 INSERT INTO portion_dic
-       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+       (portion_id, portion_type_id, measuring_type_id, amount, description)
 VALUES (3004, 3, 1, 1.0, 'Can 1kg');
 INSERT INTO portion_dic
-       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+       (portion_id, portion_type_id, measuring_type_id, amount, description)
 VALUES (3005, 3, 1, 1.5, 'Can 1,5kg');
 INSERT INTO portion_dic
-       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+       (portion_id, portion_type_id, measuring_type_id, amount, description)
 VALUES (3006, 3, 1, 2.0, 'Can 2kg');
 INSERT INTO portion_dic
-       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+       (portion_id, portion_type_id, measuring_type_id, amount, description)
 VALUES (3007, 3, 1, 3.0, 'Can 3kg');
 
 INSERT INTO portion_dic
-       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+       (portion_id, portion_type_id, measuring_type_id, amount, description)
 VALUES (3101, 3, 2, 0.25, 'Can 0,25l');
 INSERT INTO portion_dic
-       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+       (portion_id, portion_type_id, measuring_type_id, amount, description)
 VALUES (3102, 3, 2, 0.33, 'Can 0,33l');
 INSERT INTO portion_dic
-       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+       (portion_id, portion_type_id, measuring_type_id, amount, description)
 VALUES (3103, 3, 2, 0.5, 'Can 0,5l');
 INSERT INTO portion_dic
-       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+       (portion_id, portion_type_id, measuring_type_id, amount, description)
 VALUES (3104, 3, 2, 1.0, 'Can 1l');
 INSERT INTO portion_dic
-       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+       (portion_id, portion_type_id, measuring_type_id, amount, description)
 VALUES (3105, 3, 2, 1.5, 'Can 1,5l');
 INSERT INTO portion_dic
-       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+       (portion_id, portion_type_id, measuring_type_id, amount, description)
 VALUES (3106, 3, 2, 2.0, 'Can 2l');
 INSERT INTO portion_dic
-       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+       (portion_id, portion_type_id, measuring_type_id, amount, description)
 VALUES (3107, 3, 2, 3.0, 'Can 3l');
 
 INSERT INTO portion_dic
-       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+       (portion_id, portion_type_id, measuring_type_id, amount, description)
 VALUES (4001, 4, 2, 0.25, 'Bottle 0,25l');
 INSERT INTO portion_dic
-       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+       (portion_id, portion_type_id, measuring_type_id, amount, description)
 VALUES (4002, 4, 2, 0.33, 'Bottle 0,33l');
 INSERT INTO portion_dic
-       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+       (portion_id, portion_type_id, measuring_type_id, amount, description)
 VALUES (4003, 4, 2, 0.5, 'Bottle 0,5l');
 INSERT INTO portion_dic
-       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+       (portion_id, portion_type_id, measuring_type_id, amount, description)
 VALUES (4004, 4, 2, 0.6, 'Bottle 0,6l');
 INSERT INTO portion_dic
-       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+       (portion_id, portion_type_id, measuring_type_id, amount, description)
 VALUES (4005, 4, 2, 0.75, 'Bottle 0,75l');
 INSERT INTO portion_dic
-       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+       (portion_id, portion_type_id, measuring_type_id, amount, description)
 VALUES (4006, 4, 2, 1.0, 'Bottle 1l');
 INSERT INTO portion_dic
-       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+       (portion_id, portion_type_id, measuring_type_id, amount, description)
 VALUES (4007, 4, 2, 1.5, 'Bottle 1,5l');
 INSERT INTO portion_dic
-       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+       (portion_id, portion_type_id, measuring_type_id, amount, description)
 VALUES (4008, 4, 2, 1.75, 'Bottle 1,75l');
 INSERT INTO portion_dic
-       (portion_id, portion_type_id, measuring_type_id, quantity, description)
+       (portion_id, portion_type_id, measuring_type_id, amount, description)
 VALUES (4009, 4, 2, 2.0, 'Bottle 2l');
 
 /*==============================================================*/
@@ -610,9 +708,9 @@ table_id
 /* Table: warehouse                                             */
 /*==============================================================*/
 create table warehouse (
-   portion_id           INT4                 not null,
    ingredient_id        INT4                 not null,
-   quantity             FLOAT8               not null,
+   portion_id           INT4                 not null,
+   amount               FLOAT8               not null,
    constraint PK_WAREHOUSE primary key (portion_id, ingredient_id)
 );
 
@@ -651,13 +749,18 @@ alter table course
       on delete restrict on update restrict;
 
 alter table course_ingredient
-   add constraint FK_COURSE_I_COURSE_IN_INGREDIE foreign key (ingredient_id)
+   add constraint FK_COURSE_I_CRS_INGRD_COURSE foreign key (course_id)
+      references course (course_id)
+      on delete cascade on update cascade;
+
+alter table course_ingredient
+   add constraint FK_COURSE_I_CRS_INGRD_INGREDIE foreign key (ingredient_id)
       references ingredient (ingredient_id)
       on delete restrict on update restrict;
 
 alter table course_ingredient
-   add constraint FK_COURSE_I_COURSE_IN_COURSE foreign key (course_id)
-      references course (course_id)
+   add constraint FK_COURSE_I_CRS_INGRD_PORTION_ foreign key (portion_id)
+      references portion_dic (portion_id)
       on delete restrict on update restrict;
 
 alter table employee
@@ -685,15 +788,15 @@ alter table "order"
       references "table" (table_id)
       on delete restrict on update restrict;
 
-alter table order_courses
-   add constraint FK_ORDER_CO_ORDER_COU_COURSE foreign key (course_id)
+alter table order_course
+   add constraint FK_ORDER_CO_ORD_CRS_C_COURSE foreign key (course_id)
       references course (course_id)
       on delete restrict on update restrict;
 
-alter table order_courses
-   add constraint FK_ORDER_CO_ORDER_COU_ORDER foreign key (order_id)
+alter table order_course
+   add constraint FK_ORDER_CO_ORD_CRS_O_ORDER foreign key (order_id)
       references "order" (order_id)
-      on delete restrict on update restrict;
+      on delete cascade on update cascade;
 
 alter table portion_dic
    add constraint FK_PORTION__PORTION_M_MEASURIN foreign key (measuring_type_id)
