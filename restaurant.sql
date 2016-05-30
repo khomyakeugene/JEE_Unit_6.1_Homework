@@ -1,7 +1,138 @@
 /*==============================================================*/
 /* DBMS name:      PostgreSQL 8                                 */
-/* Created on:     25.05.2016 23:01:08                          */
+/* Created on:     30.05.2016 10:20:00                          */
 /*==============================================================*/
+
+
+drop view v_cooked_course;
+
+drop view v_course;
+
+drop view v_employee;
+
+drop view v_menu_courses_list;
+
+drop view v_order;
+
+drop view v_order_course;
+
+drop view v_warehouse;
+
+drop index action_dic_PK;
+
+drop table action_dic;
+
+drop index cooked_course_course_FK;
+
+drop index cook_FK;
+
+drop index cooked_course_PK;
+
+drop table cooked_course;
+
+drop index course_category_FK;
+
+drop index course_PK;
+
+drop table course;
+
+drop index course_category_dic_PK;
+
+drop table course_category_dic;
+
+drop index crs_ingrd_course_FK;
+
+drop index crs_ingrd_ingredient_FK;
+
+drop index crs_ingrd_portion_FK;
+
+drop index course_ingredient_PK;
+
+drop table course_ingredient;
+
+drop index employee_job_position_FK;
+
+drop index employee_PK;
+
+drop table employee;
+
+drop index ingredient_PK;
+
+drop table ingredient;
+
+drop index job_position_dic_PK;
+
+drop table job_position_dic;
+
+drop index measuring_type_dic_PK;
+
+drop table measuring_type_dic;
+
+drop index menu_PK;
+
+drop table menu;
+
+drop index menu_course_FK;
+
+drop index menu_header_FK;
+
+drop index menu_courses_list_PK;
+
+drop table menu_courses_list;
+
+drop index order_state_FK;
+
+drop index order_table_FK;
+
+drop index order_employee_FK;
+
+drop index order_PK;
+
+drop table "order";
+
+drop index ord_crs_order_FK;
+
+drop index ord_crs_course_FK;
+
+drop index order_course_PK;
+
+drop table order_course;
+
+drop index portion_measury_FK;
+
+drop index portion_type_FK;
+
+drop index portion_dic_PK;
+
+drop table portion_dic;
+
+drop index portion_type_dic_PK;
+
+drop table portion_type_dic;
+
+drop index state_dic_PK;
+
+drop table state_dic;
+
+drop index action_state_FK;
+
+drop index finite_state_FK;
+
+drop index init_state_FK;
+
+drop index state_graph_PK;
+
+drop table state_graph;
+
+drop index table_PK;
+
+drop table "table";
+
+drop index wrhs_portion_FK;
+
+drop index warehouse_PK;
+
+drop table warehouse;
 
 /*==============================================================*/
 /* Table: action_dic                                            */
@@ -43,7 +174,7 @@ action_type
 create table cooked_course (
    employee_id          INT4                 not null,
    course_id            INT4                 not null,
-   cook_datetime        DATE                 not null default CURRENT_TIMESTAMP,
+   cook_datetime        TIMESTAMP            not null default CURRENT_TIMESTAMP,
    weight               FLOAT8               not null,
    constraint PK_COOKED_COURSE primary key (employee_id, course_id, cook_datetime)
 );
@@ -541,7 +672,7 @@ create table "order" (
    state_type           CHAR(1)              not null,
    employee_id          INT4                 not null,
    order_number         VARCHAR(100)         not null,
-   order_datetime       DATE                 not null default CURRENT_TIMESTAMP,
+   order_datetime       TIMESTAMP            not null default CURRENT_TIMESTAMP,
    constraint PK_ORDER primary key (order_id)
 );
 
